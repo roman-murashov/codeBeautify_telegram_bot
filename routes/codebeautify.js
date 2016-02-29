@@ -20,24 +20,24 @@ var bot = new TelegramBot(token, {polling: true});
 
 var beatifyFunctions = {'js': beautify.js_beautify, 'html': beautify.html_beautify, 'css': beautify.css_beautify};
 
-var help ="Hi, this a BOT to beautify your JS ,CSS and HTML code.\n"
-+
-"how to use it(three methods):\n"+
-"1) use it in the format below:\n"+
-"           /beautify {language} {code}"+
-"example:\n"+
-'          /beautify js  if(a===b){console.log(" Hello World ^___^ ")};\n'+
+var help = "Hi, this a BOT to beautify your JS ,CSS and HTML code.\n"
+    +
+    "how to use it(three methods):\n" +
+    "1) use it in the format below:\n" +
+    "           /beautify {language} {code}" +
+    "example:\n" +
+    '          /beautify js  if(a===b){console.log(" Hello World ^___^ ")};\n' +
 
-"2) use commands of bot that we made for you:\n"+
-"    beautify_js , beautify_css and beautify_html\n"+
-"\n"+
-"3) use inline query:\n"+
-"      @codeBeautify_bot {language} {code}"+
-"       !!!Don't use this method for more than 256 character(limitation of telegram)";
-bot.on('message',function(msg){
+    "2) use commands of bot that we made for you:\n" +
+    "    beautify_js , beautify_css and beautify_html\n" +
+    "\n" +
+    "3) use inline query:\n" +
+    "      @codeBeautify_bot {language} {code}" +
+    "       !!!Don't use this method for more than 256 character(limitation of telegram)";
+bot.on('message', function (msg) {
     console.log(msg);
 });
-bot.onText(/\/start|help/i,function(msg,match){
+bot.onText(/\/start|help/i, function (msg, match) {
     bot.sendMessage(msg.chat.id, help);
 });
 //handle inline_queries
@@ -59,15 +59,19 @@ bot.on('inline_query', function (msg) {
 });
 
 
+bot.onText(/^\/beautify$/i, function (msg, match) {
+    var result = "please send it in this format\n " + "/beautify {lang name} {code} or use the commands of bot";
+    bot.sendMessage(msg.chat.id, result);
+})
 //handle queries that user write it completely
-bot.onText(/\/beautify\s*([^]+)?/, function (msg, match) {
+bot.onText(/\/beautify ([^]+)/i, function (msg, match) {
     //beautify the code
     var result = beautfiyCode(match[1]) || "please send it in this format\n " + "/beautify {lang name} {code}";
     bot.sendMessage(msg.chat.id, result, {'parse_mode': 'Markdown'});
 });
 
 //handle queries that done with commands
-bot.onText(/\/beautify_(js|html|css)/, function (msg, match) {
+bot.onText(/\/beautify_(js|html|css)/i, function (msg, match) {
     var formId = msg.chat.id;
     //send a message to user and beautify the response
     bot.sendMessage(formId, 'send your code now', opts)
