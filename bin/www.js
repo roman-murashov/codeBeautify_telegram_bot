@@ -10,7 +10,8 @@ var http = require('http');
 /**
  * Get port from environment and store in Express.
  */
-
+ app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080);
+ app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
 
 /**
  * Create HTTP server.
@@ -23,7 +24,7 @@ var server = http.createServer(app);
  */
 
 //server.listen(app.get('port') ,app.get('ip'));
-server.listen();
+server.listen(app.get('port') ,app.get('ip'));
 /**
  * Normalize a port into a number, string, or false.
  */
